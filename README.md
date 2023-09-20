@@ -2,7 +2,7 @@
 Implementação de Automata, segundo artigo 'Implementação de Autômatos Finitos' de Paulo Renato Kinjo.
 Escrito em JAVA
 
-# Exemplo
+# Exemplo 1
 ```
   Automata nier = new Automata();
   String line = "ab";
@@ -21,4 +21,26 @@ Escrito em JAVA
   nier.setFinalState(2);
   
   System.out.println("AUTOMATO RECONHECE A LINGUAGEM: " + nier.recognize(line));
+```
+
+# Exemplo 2 - Com loop no estado 1
+```
+  Automata a2 = new Automata();
+  String line = "abbbbbba";
+
+  //Estados
+  a2.addState(0);
+  a2.addState(1);
+  a2.addState(2);
+
+  //Transições
+  a2.addTransition(0, 1, "a");
+  a2.addTransition(1, 1, "b");
+  a2.addTransition(1, 2, "a");
+
+  //Iniciais e Finais
+  a2.setStartState(0);
+  a2.setFinalState(2);
+
+  System.out.println("AUTOMATO RECONHECE A LINGUAGEM: " + a2.recognize(line));
 ```
