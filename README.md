@@ -1,6 +1,6 @@
 # Automata-de-Paulo
 Implementação de Automata, segundo artigo 'Implementação de Autômatos Finitos' de Paulo Renato Kinjo.
-Escrito em JAVA
+Escrito em JAVA 8
 
 # Exemplo 1
 ```
