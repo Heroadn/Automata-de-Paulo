@@ -1,9 +1,5 @@
 //Classe responsavel por metodos auxuliares ao automata
 public final class BlackBox {
-    public BlackBox()
-    {
-
-    }
 
     public static void main(String[] args)
     {
@@ -26,6 +22,10 @@ public final class BlackBox {
         nier.setStartState(0);
         nier.setFinalState(2);
 
-        System.out.println("AUTOMATO RECONHECE A LINGUAGEM: " + nier.recognize(line));
+        if(nier.recognize(line))
+            System.out.println("DEBUG::SUCCESS");
+        else
+            System.out.println("DEBUG::FAILED");
+
     }
 }

@@ -38,7 +38,7 @@ public class Transition {
                 " " + origin.getId()  +
                 " --- " + symbol + " ---> " +
                 destiny.getId() +
-                '}';
+                " }";
     }
 
     /*
