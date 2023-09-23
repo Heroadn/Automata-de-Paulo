@@ -35,9 +35,17 @@ public class Transition {
     @Override
     public String toString() {
         return "Transition{" +
+                " " + origin.getId()  +
+                " --- " + symbol + " ---> " +
+                destiny.getId() +
+                '}';
+    }
+
+    /*
+    * return "Transition{" +
                 "origin="    + origin.getId() +
                 ", destiny=" + destiny.getId() +
                 ", symbol='" + symbol + '\'' +
                 '}';
-    }
+    * */
 }

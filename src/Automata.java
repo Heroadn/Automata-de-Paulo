@@ -1,5 +1,7 @@
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class Automata {
     HashMap<Integer, State> states;
@@ -48,7 +50,7 @@ public class Automata {
             current = destiny;
         }
 
-        //se o ultimo estado atingido
+        //se for o ultimo estado atingido
         //for final a linguagem é reconhecida
         return isFinal(current);
     }
@@ -137,41 +139,20 @@ public class Automata {
         System.out.println(transition);
     }
 
-    private HashMap<Integer, State> getStates() {
-        return states;
-    }
-
-    private void setStates(
-            HashMap<Integer, State> states)
-    {
-        this.states = states;
-    }
-
-    private HashMap<Integer, State> getFinalStates() {
+    public Map<Integer, State> getFinalStates() {
         return finalStates;
     }
 
-    private void setFinalStates(
-            HashMap<Integer, State> finalStates)
-    {
-        this.finalStates = finalStates;
-    }
-
-    private State getStartState()
-    {
-        return startState;
-    }
-
-    private void setStartState(State startState)
-    {
-        this.startState = startState;
-    }
-
-    public HashSet<Transition> getTransitions() {
+    public Set<Transition> getTransitions() {
         return transitions;
     }
 
-    public void setTransitions(HashSet<Transition> transitions) {
-        this.transitions = transitions;
+    public State getStartState() {
+        return startState;
     }
+
+    public Map<Integer, State> getStates() {
+        return states;
+    }
+
 }
