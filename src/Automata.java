@@ -1,12 +1,11 @@
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Automata {
     HashMap<Integer, State> states;
     HashMap<Integer, State> finalStates;
     HashSet<Transition> transitions;
+    HashSet<String> alphabet;
     State startState;
     boolean blackBox;
 
@@ -15,6 +14,7 @@ public class Automata {
         this.states = new HashMap<>();
         this.finalStates = new HashMap<>();
         this.transitions = new HashSet<>();
+        this.alphabet = new HashSet<>();
     }
 
     public Automata(boolean blackBox)
@@ -59,7 +59,7 @@ public class Automata {
      * Adiciona um estado com identificador 'id'
      * @param  id   identificado do estado
      */
-    State addState(
+    public State addState(
             Integer id)
     {
         return states.put(id, new State(id));
@@ -69,7 +69,7 @@ public class Automata {
      * Faz com o estado 'id' seja final
      * @param  id   identificador do estado, setado por @addState
      */
-    void setFinalState(
+    public void setFinalState(
             Integer id)
     {
         finalStates.put(id, new State(id));
@@ -100,6 +100,41 @@ public class Automata {
         State a = states.get(origin);
         State b = states.get(destiny);
         transitions.add(new Transition(a, b, symbol));
+        alphabet.add(symbol);
+    }
+
+    /**
+     * Adiciona o alphabeto do automata,
+     * seu alfabeto tambem pode ser adicionado
+     * indiretamente pelo metodo addTransition
+     * @param  alphabet   alfabeto do automata
+     */
+    public void setAlphabet(
+            List<String> alphabet)
+    {
+        this.alphabet.addAll(alphabet);
+    }
+
+    /**
+     * Verifica se o automata tem as condiçoes de
+     * nao ser deterministico
+     * @return 'true' se o automata for nao deterministico
+     */
+    public boolean isNFA()
+    {
+        AtomicBoolean result = new AtomicBoolean(false);
+
+        this.states.forEach((id, state) -> {
+            for (String symbol : this.alphabet) {
+                if(countTransition(state, symbol) > 1)
+                {
+                    result.set(true);
+                    return;
+                }
+            }
+        });
+
+        return result.get();
     }
 
     /**
@@ -108,7 +143,9 @@ public class Automata {
      * @param  symbol  simbolo pertencente ao alfabeto do automato
      * @return transição para o 'state' com 'symbol'
      */
-    private Transition getTransition(State state, String symbol)
+    private Transition getTransition(
+            State state,
+            String symbol)
     {
         for (Transition transition : transitions)
         {
@@ -120,12 +157,29 @@ public class Automata {
         return null;
     }
 
+    private int countTransition(
+            State state,
+            String symbol)
+    {
+        int count = 0;
+
+        for (Transition transition : transitions)
+        {
+            if(transition.getOrigin() == state
+                    && transition.getSymbol().equals(symbol))
+                count++;
+        }
+
+        return count;
+    }
+
     /**
      * Verifica se o estado em questão é final
      * @param  state  estado pertencente ao automato
      * @return      se o estado é final
      */
-    private boolean isFinal(State state)
+    private boolean isFinal(
+            State state)
     {
         return finalStates.containsKey(state.getId());
     }
@@ -134,7 +188,8 @@ public class Automata {
      * ;)
      * @param  transition  Transição
      */
-    private void debug(Transition transition)
+    private void debug(
+            Transition transition)
     {
         System.out.println(transition);
     }
