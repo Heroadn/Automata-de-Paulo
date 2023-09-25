@@ -1,5 +1,4 @@
-import java.util.Map;
-import java.util.Set;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
@@ -43,42 +42,28 @@ public final class BlackBox {
             State current,
             String symbol)
     {
-        Transition transition = getTransition(
+        Transition next = search(
                 current,
-                String.valueOf(symbol));
+                String.valueOf(symbol)).get(0);
 
-        if(transition == null)
-            return null;
-
-        return transition.getDestiny();
+        return next.getDestiny();
     }
 
 
     /**
-     * Retorna uma transição para um estado, com base no symbolo
+     * procura uma transição para um estado, com base no symbolo
      * @param  state   estado pertencente ao automato
      * @param  symbol  simbolo pertencente ao alfabeto do automato
      * @return transição para o 'state' com 'symbol'
      */
-    private Transition getTransition(
-            State state,
-            String symbol)
-    {
-
-        return this.automata.getTransitions().stream()
-                .filter(transition -> transition.getOrigin() == state)
-                .filter(transition -> transition.getSymbol().equals(symbol))
-                .findFirst().get();
-    }
-
-    private long countTransition(
+    private List<Transition> search(
             State state,
             String symbol)
     {
         return this.automata.getTransitions().stream()
                 .filter(transition -> transition.getOrigin() == state)
                 .filter(transition -> transition.getSymbol().equals(symbol))
-                .count();
+                .collect(Collectors.toList());
     }
 
     /**
@@ -92,7 +77,7 @@ public final class BlackBox {
 
         this.automata.getStates().forEach((id, state) -> {
             for (String symbol : this.automata.getAlphabet()) {
-                if(countTransition(state, symbol) > 1)
+                if(search(state, symbol).size() > 1)
                 {
                     result.set(true);
                     return;
