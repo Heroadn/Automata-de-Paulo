@@ -6,8 +6,9 @@ public class Automata {
     HashMap<Integer, State> finalStates;
     HashSet<Transition> transitions;
     HashSet<String> alphabet;
-    State startState;
-    boolean blackBox;
+    State startState;   //Estado inicial
+    State current;      //Estado atual
+    boolean blackBox;   //Flag de debug
 
     public Automata()
     {
@@ -17,7 +18,8 @@ public class Automata {
         this.alphabet = new HashSet<>();
     }
 
-    public Automata(boolean blackBox)
+    public Automata(
+            boolean blackBox)
     {
         this();
         this.blackBox = blackBox;
@@ -28,30 +30,21 @@ public class Automata {
      * @param  string  sequencia de simbolos
      * @return se 'string' for reconhecida pelo automato retorna true
      */
-    boolean recognize(String string)
+    boolean recognize(
+            String string)
     {
-        State start = this.startState;
-        State current = start;
+        this.current = this.startState;
 
         //for each character in the string
         for (char symbol: string.toCharArray())
         {
-            Transition transition = getTransition(current, String.valueOf(symbol));
-
-            //continue indo enquanto houver transições
-            if(transition == null)
-                return false;
-
-            if(blackBox)
-                debug(transition);
-
-            State origin  = transition.getOrigin();
-            State destiny = transition.getDestiny();
-            current = destiny;
+            this.current = next(
+                    this.current,
+                    String.valueOf(symbol));
         }
 
-        //se for o ultimo estado atingido
-        //for final a linguagem é reconhecida
+        //se tiver atingido o estado final
+        //a linguagem é reconhecida
         return isFinal(current);
     }
 
@@ -138,6 +131,29 @@ public class Automata {
     }
 
     /**
+     * Retorna o proximo estado com base no estado atual e o simbolo
+     * @current estado atual
+     * @symbol  simbolo
+     * @return o proximo estado
+     */
+    private State next(
+            State current,
+            String symbol)
+    {
+        Transition transition = getTransition(current, String.valueOf(symbol));
+
+        //continue indo enquanto houver transições
+        if(transition == null)
+            return null;
+
+        if(blackBox)
+            debug(transition);
+
+        return transition.getDestiny();
+    }
+
+
+    /**
      * Retorna uma transição para um estado, com base no symbolo
      * @param  state   estado pertencente ao automato
      * @param  symbol  simbolo pertencente ao alfabeto do automato
@@ -210,4 +226,12 @@ public class Automata {
         return states;
     }
 
+    public State getCurrent() {
+        return current;
+    }
+
+    public void setCurrent(
+            State current) {
+        this.current = current;
+    }
 }

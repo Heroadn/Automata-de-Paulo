@@ -1,4 +1,5 @@
 //Classe responsavel por metodos auxuliares ao automata
+//No momento apenas testes da lib
 public final class BlackBox {
 
     public static void main(String[] args)
