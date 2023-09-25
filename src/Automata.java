@@ -21,7 +21,8 @@ public class Automata {
         blackBox = new BlackBox(this);
     }
 
-    public Automata(String name)
+    public Automata(
+            String name)
     {
         this();
         this.name = name;

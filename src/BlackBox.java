@@ -6,7 +6,9 @@ import java.util.stream.Collectors;
 public final class BlackBox {
     private final Automata automata;
 
-    public BlackBox(Automata automata) {
+    public BlackBox(
+            Automata automata)
+    {
         this.automata = automata;
     }
 
@@ -48,7 +50,6 @@ public final class BlackBox {
 
         return next.getDestiny();
     }
-
 
     /**
      * procura uma transição para um estado, com base no symbolo
