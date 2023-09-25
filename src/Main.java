@@ -9,9 +9,7 @@ public class Main {
             String line = "ab";
 
             //Estados
-            nier.addState(0);
-            nier.addState(1);
-            nier.addState(2);
+            nier.addState(0, 1, 2);
 
             //Transições
             nier.addTransition(0, 1, "a");
@@ -30,9 +28,7 @@ public class Main {
             String line = "abbbbbba";
 
             //Estados
-            a2.addState(0);
-            a2.addState(1);
-            a2.addState(2);
+            a2.addState(0, 1, 2);
 
             //Transições
             a2.addTransition(0, 1, "a");

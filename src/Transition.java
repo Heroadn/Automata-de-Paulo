@@ -8,6 +8,13 @@ public class Transition {
         this.symbol  = symbol;
     }
 
+    public Transition(Integer origin, Integer destiny, String symbol) {
+        this(
+            new State(origin),
+            new State(destiny),
+            symbol);
+    }
+
     public State getOrigin() {
         return origin;
     }

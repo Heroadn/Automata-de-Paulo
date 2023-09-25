@@ -8,7 +8,8 @@ public class Automata {
     HashSet<String> alphabet;
     State startState;   //Estado inicial
     State current;      //Estado atual
-    boolean blackBox;   //Flag de debug
+    BlackBox blackBox;  //Metodos que o automato pode usar
+    String name;        //Nome do automata(usado para testes)
 
     public Automata()
     {
@@ -16,13 +17,14 @@ public class Automata {
         this.finalStates = new HashMap<>();
         this.transitions = new HashSet<>();
         this.alphabet = new HashSet<>();
+
+        blackBox = new BlackBox(this);
     }
 
-    public Automata(
-            boolean blackBox)
+    public Automata(String name)
     {
         this();
-        this.blackBox = blackBox;
+        this.name = name;
     }
 
     /**
@@ -33,29 +35,38 @@ public class Automata {
     boolean recognize(
             String string)
     {
-        this.current = this.startState;
+        return blackBox.recognize(string);
+    }
 
-        //for each character in the string
-        for (char symbol: string.toCharArray())
-        {
-            this.current = next(
-                    this.current,
-                    String.valueOf(symbol));
-        }
-
-        //se tiver atingido o estado final
-        //a linguagem é reconhecida
-        return isFinal(current);
+    /**
+     * Verifica se o automata tem as condiçoes de
+     * nao ser deterministico
+     * @return 'true' se o automata for nao deterministico
+     */
+    public boolean isNFA()
+    {
+        return blackBox.isNFA();
     }
 
     /**
      * Adiciona um estado com identificador 'id'
      * @param  id   identificado do estado
      */
-    public State addState(
+    public void addState(
             Integer id)
     {
-        return states.put(id, new State(id));
+        states.put(id, new State(id));
+    }
+
+    /**
+     * Cria um estado com identificadores 'ids'
+     * @param  ids   identificadores de estado
+     */
+    public void addState(
+            Integer... ids)
+    {
+        for (Integer id: ids)
+            addState(id);
     }
 
     /**
@@ -66,6 +77,17 @@ public class Automata {
             Integer id)
     {
         finalStates.put(id, new State(id));
+    }
+
+    /**
+     * Faz com o estado 'id' seja final
+     * @param  ids   identificadores do estado final
+     */
+    public void setFinalState(
+            Integer... ids)
+    {
+        for (Integer id: ids)
+            finalStates.put(id, new State(id));
     }
 
     /**
@@ -96,6 +118,16 @@ public class Automata {
         alphabet.add(symbol);
     }
 
+    public void addTransition(
+            Transition... transitions)
+    {
+        for (Transition transition : transitions)
+            addTransition(
+                    transition.getOrigin().getId(),
+                    transition.getDestiny().getId(),
+                    transition.getSymbol());
+    }
+
     /**
      * Adiciona o alphabeto do automata,
      * seu alfabeto tambem pode ser adicionado
@@ -109,105 +141,14 @@ public class Automata {
     }
 
     /**
-     * Verifica se o automata tem as condiçoes de
-     * nao ser deterministico
-     * @return 'true' se o automata for nao deterministico
-     */
-    public boolean isNFA()
-    {
-        AtomicBoolean result = new AtomicBoolean(false);
-
-        this.states.forEach((id, state) -> {
-            for (String symbol : this.alphabet) {
-                if(countTransition(state, symbol) > 1)
-                {
-                    result.set(true);
-                    return;
-                }
-            }
-        });
-
-        return result.get();
-    }
-
-    /**
-     * Retorna o proximo estado com base no estado atual e o simbolo
-     * @current estado atual
-     * @symbol  simbolo
-     * @return o proximo estado
-     */
-    private State next(
-            State current,
-            String symbol)
-    {
-        Transition transition = getTransition(current, String.valueOf(symbol));
-
-        //continue indo enquanto houver transições
-        if(transition == null)
-            return null;
-
-        if(blackBox)
-            debug(transition);
-
-        return transition.getDestiny();
-    }
-
-
-    /**
-     * Retorna uma transição para um estado, com base no symbolo
-     * @param  state   estado pertencente ao automato
-     * @param  symbol  simbolo pertencente ao alfabeto do automato
-     * @return transição para o 'state' com 'symbol'
-     */
-    private Transition getTransition(
-            State state,
-            String symbol)
-    {
-        for (Transition transition : transitions)
-        {
-            if(transition.getOrigin() == state
-                    && transition.getSymbol().equals(symbol))
-                return transition;
-        }
-
-        return null;
-    }
-
-    private int countTransition(
-            State state,
-            String symbol)
-    {
-        int count = 0;
-
-        for (Transition transition : transitions)
-        {
-            if(transition.getOrigin() == state
-                    && transition.getSymbol().equals(symbol))
-                count++;
-        }
-
-        return count;
-    }
-
-    /**
      * Verifica se o estado em questão é final
      * @param  state  estado pertencente ao automato
      * @return      se o estado é final
      */
-    private boolean isFinal(
+    public boolean isFinal(
             State state)
     {
         return finalStates.containsKey(state.getId());
-    }
-
-    /**
-     * ;)
-     * @param  transition  Transição
-     */
-    private void debug(
-            Transition transition)
-    {
-        System.out.println(transition);
     }
 
     public Map<Integer, State> getFinalStates() {
@@ -233,5 +174,23 @@ public class Automata {
     public void setCurrent(
             State current) {
         this.current = current;
+    }
+
+    public Set<String> getAlphabet() {
+        return alphabet;
+    }
+
+    public void setAlphabet(
+            HashSet<String> alphabet) {
+        this.alphabet = alphabet;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(
+            String name) {
+        this.name = name;
     }
 }
