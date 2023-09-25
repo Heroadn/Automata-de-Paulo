@@ -40,6 +40,28 @@ public final class BlackBox {
                 this.automata.getCurrent());
     }
 
+    /**
+     * Verifica se o automata tem as condiçoes de
+     * nao ser deterministico
+     * @return 'true' se o automata for nao deterministico
+     */
+    public boolean isNFA()
+    {
+        AtomicBoolean result = new AtomicBoolean(false);
+
+        this.automata.getStates().forEach((id, state) -> {
+            for (String symbol : this.automata.getAlphabet()) {
+                if(search(state, symbol).size() > 1)
+                {
+                    result.set(true);
+                    return;
+                }
+            }
+        });
+
+        return result.get();
+    }
+
     private State next(
             State current,
             String symbol)
@@ -65,27 +87,5 @@ public final class BlackBox {
                 .filter(transition -> transition.getOrigin() == state)
                 .filter(transition -> transition.getSymbol().equals(symbol))
                 .collect(Collectors.toList());
-    }
-
-    /**
-     * Verifica se o automata tem as condiçoes de
-     * nao ser deterministico
-     * @return 'true' se o automata for nao deterministico
-     */
-    public boolean isNFA()
-    {
-        AtomicBoolean result = new AtomicBoolean(false);
-
-        this.automata.getStates().forEach((id, state) -> {
-            for (String symbol : this.automata.getAlphabet()) {
-                if(search(state, symbol).size() > 1)
-                {
-                    result.set(true);
-                    return;
-                }
-            }
-        });
-
-        return result.get();
     }
 }
