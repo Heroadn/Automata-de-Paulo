@@ -24,8 +24,8 @@ public class Main {
             nfa.getTransitions().forEach(System.out::println);
 
             //Iniciais e Finais
-            nfa.setStartState(0);
-            nfa.setFinalState(2);
+            nfa.setStart(0);
+            nfa.setFinal(2);
             System.out.println("IS_NFA::NFA = " + nfa.isNFA());
         }
 
@@ -45,8 +45,8 @@ public class Main {
                     new Transition(3, 4, "d"));
 
             //Iniciais e Finais
-            nier.setStartState(0);
-            nier.setFinalState(4);
+            nier.setStart(0);
+            nier.setFinal(4);
 
             System.out.print("RECOGNIZES::" + nier.getName() + " = ");
             if(nier.recognize(line))
@@ -70,8 +70,8 @@ public class Main {
                     new Transition(1, 2, "a"));
 
             //Iniciais e Finais
-            a2.setStartState(0);
-            a2.setFinalState(2);
+            a2.setStart(0);
+            a2.setFinal(2);
 
             System.out.print("RECOGNIZES::" + a2.getName() + " = ");
             if(a2.recognize(line))

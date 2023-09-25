@@ -1,5 +1,4 @@
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Automata {
     HashMap<Integer, State> states;
@@ -84,7 +83,7 @@ public class Automata {
      * Faz com o estado 'id' seja final
      * @param  id   identificador do estado, setado por @addState
      */
-    public void setFinalState(
+    public void setFinal(
             Integer id)
     {
         finalStates.put(id, new State(id));
@@ -94,7 +93,7 @@ public class Automata {
      * Faz com o estado 'id' seja final
      * @param  ids   identificadores do estado final
      */
-    public void setFinalState(
+    public void setFinal(
             Integer... ids)
     {
         for (Integer id: ids)
@@ -105,7 +104,7 @@ public class Automata {
      * Faz com o estado 'id' seja inicial
      * @param  id   identificador do estado, setado por @addState
      */
-    public void setStartState(
+    public void setStart(
             int id)
     {
         startState = states.get(id);
