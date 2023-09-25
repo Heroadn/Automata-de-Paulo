@@ -159,6 +159,9 @@ public class Automata {
     public boolean isFinal(
             State state)
     {
+        if(state == null)
+            return false;
+
         return finalStates.containsKey(state.getId());
     }
 

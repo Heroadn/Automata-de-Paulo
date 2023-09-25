@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
@@ -66,11 +67,14 @@ public final class BlackBox {
             State current,
             String symbol)
     {
-        Transition next = search(
+        List<Transition> next = search(
                 current,
-                String.valueOf(symbol)).get(0);
+                String.valueOf(symbol));
 
-        return next.getDestiny();
+        if(next.isEmpty())
+            return null;
+
+        return next.get(0).getDestiny();
     }
 
     /**
