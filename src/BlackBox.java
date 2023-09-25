@@ -105,7 +105,7 @@ public final class BlackBox {
                     new Transition(1, 2, "b")); //1 --- b ---> 2
 
             //debug
-            System.out.println("NFA TRANSITIONS");
+            System.out.println(nfa.getName() + " TRANSITIONS");
             nfa.getTransitions().forEach(System.out::println);
 
             //Iniciais e Finais

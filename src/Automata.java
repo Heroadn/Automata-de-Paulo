@@ -27,6 +27,16 @@ public class Automata {
         this.name = name;
     }
 
+    public Automata(String name,
+                    Integer[] states,
+                    Transition[] transitions)
+    {
+        this();
+        this.addState(states);
+        this.addTransition(transitions);
+        this.name = name;
+    }
+
     /**
      * Retorna se o automato reconhece a linguagem 'string'
      * @param  string  sequencia de simbolos
