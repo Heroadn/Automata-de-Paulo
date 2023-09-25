@@ -3,43 +3,81 @@
 //foram implementadas com algumas modificações
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
+        //automato nao deterministico
         {
-            Automata nier = new Automata();
+            Automata nfa = new Automata("NFA");
             String line = "ab";
 
             //Estados
-            nier.addState(0, 1, 2);
+            nfa.addState(0, 1, 2);
 
             //Transições
-            nier.addTransition(0, 1, "a");
-            nier.addTransition(1, 2, "b");
+            nfa.addTransition(
+                    new Transition(0, 1, "a"),  //0 --- a ---> 1
+                    new Transition(0, 2, "a"),  //0 --- a ---> 2
+                    new Transition(1, 2, "b")); //1 --- b ---> 2
+
+            //debug
+            System.out.println(nfa.getName() + " TRANSITIONS");
+            nfa.getTransitions().forEach(System.out::println);
+
+            //Iniciais e Finais
+            nfa.setStartState(0);
+            nfa.setFinalState(2);
+            System.out.println("IS_NFA::NFA = " + nfa.isNFA());
+        }
+
+        //automato nier
+        {
+            Automata nier = new Automata("NIER");
+            String line = "abcd";
+
+            //Estados
+            nier.addState(0, 1, 2, 3, 4);
+
+            //Transições
+            nier.addTransition(
+                    new Transition(0, 1, "a"),
+                    new Transition(1, 2, "b"),
+                    new Transition(2, 3, "c"),
+                    new Transition(3, 4, "d"));
 
             //Iniciais e Finais
             nier.setStartState(0);
-            nier.setFinalState(2);
+            nier.setFinalState(4);
 
-            System.out.println("AUTOMATO RECONHECE A LINGUAGEM: " + nier.recognize(line));
+            System.out.print("RECOGNIZES::" + nier.getName() + " = ");
+            if(nier.recognize(line))
+                System.out.println("SUCCESS");
+            else
+                System.out.println("FAILED");
         }
 
         //com loop no estado 1
         {
-            Automata a2 = new Automata();
+            Automata a2 = new Automata("A2");
             String line = "abbbbbba";
 
             //Estados
             a2.addState(0, 1, 2);
 
             //Transições
-            a2.addTransition(0, 1, "a");
-            a2.addTransition(1, 1, "b");
-            a2.addTransition(1, 2, "a");
+            a2.addTransition(
+                    new Transition(0, 1, "a"),
+                    new Transition(1, 1, "b"),
+                    new Transition(1, 2, "a"));
 
             //Iniciais e Finais
             a2.setStartState(0);
             a2.setFinalState(2);
 
-            System.out.println("AUTOMATO RECONHECE A LINGUAGEM: " + a2.recognize(line));
+            System.out.print("RECOGNIZES::" + a2.getName() + " = ");
+            if(a2.recognize(line))
+                System.out.println("SUCCESS");
+            else
+                System.out.println("FAILED");
         }
     }
 }
