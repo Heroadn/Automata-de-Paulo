@@ -2,20 +2,22 @@ import java.util.*;
 
 public class Automata {
     HashMap<Integer, State> states;
-    HashMap<Integer, State> finalStates;
+    HashMap<Integer, State> finals;
+    HashMap<Integer, State> non_finals;
     HashSet<Transition> transitions;
     HashSet<String> alphabet;
     State startState;   //Estado inicial
-    State current;      //Estado atual
+    State current;      //Estado atual / head
     BlackBox blackBox;  //Metodos que o automato pode usar
     String name;        //Nome do automata(usado para testes)
 
     public Automata()
     {
         this.states = new HashMap<>();
-        this.finalStates = new HashMap<>();
+        this.finals = new HashMap<>();
         this.transitions = new HashSet<>();
         this.alphabet = new HashSet<>();
+        this.non_finals = new HashMap<>();
 
         blackBox = new BlackBox(this);
     }
@@ -49,6 +51,22 @@ public class Automata {
     }
 
     /**
+     * Retorna se o automato reconhece a linguagem 'string'
+     * @param  string  sequencia de simbolos
+     * @param  debug   ativa o modo debug/tracing
+     * @return se 'string' for reconhecida pelo automato retorna true
+     */
+    boolean recognize(
+            String string,
+            boolean debug)
+    {
+        boolean value = recognize(string);
+        System.out.print("RECOGNIZES::" + this.getName() + " = ");
+        System.out.println(value ? "SUCCESS" : "FAILED");
+        return value;
+    }
+
+    /**
      * Verifica se o automata tem as condiçoes de
      * nao ser deterministico
      * @return 'true' se o automata for nao deterministico
@@ -66,6 +84,7 @@ public class Automata {
             Integer id)
     {
         states.put(id, new State(id));
+        non_finals.put(id, new State(id));
     }
 
     /**
@@ -86,7 +105,8 @@ public class Automata {
     public void setFinal(
             Integer id)
     {
-        finalStates.put(id, new State(id));
+        finals.put(id, new State(id));
+        non_finals.remove(id);
     }
 
     /**
@@ -97,17 +117,18 @@ public class Automata {
             Integer... ids)
     {
         for (Integer id: ids)
-            finalStates.put(id, new State(id));
+            finals.put(id, new State(id));
     }
 
     /**
      * Faz com o estado 'id' seja inicial
      * @param  id   identificador do estado, setado por @addState
      */
-    public void setStart(
+    public Automata setStart(
             int id)
     {
         startState = states.get(id);
+        return this;
     }
 
     /**
@@ -161,11 +182,15 @@ public class Automata {
         if(state == null)
             return false;
 
-        return finalStates.containsKey(state.getId());
+        return finals.containsKey(state.getId());
     }
 
-    public Map<Integer, State> getFinalStates() {
-        return finalStates;
+    public Map<Integer, State> getFinals() {
+        return finals;
+    }
+
+    public Map<Integer, State> getNon_finals() {
+        return non_finals;
     }
 
     public Set<Transition> getTransitions() {
@@ -205,5 +230,14 @@ public class Automata {
     public void setName(
             String name) {
         this.name = name;
+    }
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        getTransitions().forEach((val)->{
+            result.append(val).append("\n");
+        });
+
+        return result.toString();
     }
 }

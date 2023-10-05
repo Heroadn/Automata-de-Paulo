@@ -1,5 +1,8 @@
-public class State {
+import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
 
+public class State {
     private int id;
     private String name;
     private String label;
@@ -30,5 +33,12 @@ public class State {
 
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    @Override
+    public String toString() {
+        return "State{" +
+                "id=" + id +
+                '}';
     }
 }

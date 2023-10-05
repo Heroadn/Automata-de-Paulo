@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
@@ -41,6 +42,26 @@ public final class BlackBox {
                 this.automata.getCurrent());
     }
 
+    Automata minimize()
+    {
+        List<Map<Integer, State>> partition_new = new ArrayList<>();
+        List<Map<Integer, State>> partition_old = new ArrayList<>();
+
+        Map<Integer, State> finals     = this.automata.getFinals();
+        Map<Integer, State> non_finals = this.automata.getNon_finals();
+
+        partition_old.add(this.automata.getFinals());
+        partition_old.add(this.automata.getNon_finals());
+
+        while(partition_old.size() != partition_new.size())
+        {
+
+        }
+
+
+        return null;
+    }
+
     /**
      * Verifica se o automata tem as condiçoes de
      * nao ser deterministico
@@ -62,6 +83,14 @@ public final class BlackBox {
 
         return result.get();
     }
+
+    private List<Map<Integer, State>> split( List<Map<Integer, State>> partition)
+    {
+        List<Map<Integer, State>> result =  new ArrayList<>();
+
+        return result;
+    }
+
 
     private State next(
             State current,
