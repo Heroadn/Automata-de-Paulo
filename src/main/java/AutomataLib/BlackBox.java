@@ -1,8 +1,12 @@
+package AutomataLib;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 //Classe responsavel por metodos auxuliares ao automata
 public final class BlackBox {
@@ -31,6 +35,10 @@ public final class BlackBox {
                     this.automata.getCurrent(),
                     String.valueOf(symbol));
 
+            //System.out.println(
+            //        "CURRENT: " + automata.getCurrent() + "\n" +
+            //        "NEXT: " + next + "\n" +
+            //        "SYMBOL: " + symbol + "\n");
             //estado atual como o proximo da transição
             this.automata.setCurrent(
                     next);
@@ -45,10 +53,10 @@ public final class BlackBox {
     Automata minimize()
     {
         List<Map<Integer, State>> partition_new = new ArrayList<>();
-        List<Map<Integer, State>> partition_old = new ArrayList<>();
+        List<Map<String, State>> partition_old = new ArrayList<>();
 
-        Map<Integer, State> finals     = this.automata.getFinals();
-        Map<Integer, State> non_finals = this.automata.getNon_finals();
+        Map<String, State> finals     = this.automata.getFinals();
+        Map<String, State> non_finals = this.automata.getNon_finals();
 
         partition_old.add(this.automata.getFinals());
         partition_old.add(this.automata.getNon_finals());
@@ -116,9 +124,12 @@ public final class BlackBox {
             State state,
             String symbol)
     {
+        if(state == null)
+            return new ArrayList<>();
+
         return this.automata.getTransitions().stream()
-                .filter(transition -> transition.getOrigin() == state)
-                .filter(transition -> transition.getSymbol().equals(symbol))
+                .filter(transition -> transition.getOrigin().getId().equalsIgnoreCase(state.getId()))
+                .filter(transition -> transition.getSymbol().equalsIgnoreCase(symbol))
                 .collect(Collectors.toList());
     }
 }

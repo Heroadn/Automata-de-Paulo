@@ -1,10 +1,10 @@
-# Automata-de-Paulo
-Implementação de Automata, segundo artigo 'Implementação de Autômatos Finitos' de Paulo Renato Kinjo.
+# AutomataLib.AutomataLib-de-Paulo
+Implementação de AutomataLib.AutomataLib, segundo artigo 'Implementação de Autômatos Finitos' de Paulo Renato Kinjo.
 Escrito em JAVA 8
 
 # Exemplo 1
 ```
-  Automata nier = new Automata();
+  AutomataLib.AutomataLib nier = new AutomataLib.AutomataLib();
   String line = "ab";
   
   //Estados
@@ -25,7 +25,7 @@ Escrito em JAVA 8
 
 # Exemplo 2 - Com loop no estado 1
 ```
-  Automata a2 = new Automata();
+  AutomataLib.AutomataLib a2 = new AutomataLib.AutomataLib();
   String line = "abbbbbba";
 
   //Estados
