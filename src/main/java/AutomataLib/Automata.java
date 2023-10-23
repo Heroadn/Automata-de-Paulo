@@ -8,10 +8,10 @@ public class Automata {
     HashMap<String, State> non_finals;
     HashSet<Transition> transitions;
     HashSet<String> alphabet;
-    State startState;   //Estado inicial
-    State current;      //Estado atual / head
-    BlackBox blackBox;  //Metodos que o automato pode usar
-    String name;        //Nome do automata(usado para testes)
+    BlackBox blackBox;     //Metodos que o automato pode usar
+    String startStateId;   //Estado inicial
+    String currentId;      //Estado atual / head
+    String name;           //Nome do automata(usado para testes)
 
     public Automata()
     {
@@ -49,22 +49,30 @@ public class Automata {
     boolean recognize(
             String string)
     {
+        //System.out.print("RECOGNIZES::" + this.getName() + " = ");
+        //System.out.println(value ? "SUCCESS" : "FAILED");
         return blackBox.recognize(string);
     }
 
-    /**
-     * Retorna se o automato reconhece a linguagem 'string'
-     * @param  string  sequencia de simbolos
-     * @param  debug   ativa o modo debug/tracing
-     * @return se 'string' for reconhecida pelo automato retorna true
-     */
-    public boolean recognize(
-            String string,
-            boolean debug)
+    public boolean accepts(String string, boolean debug)
     {
         boolean value = recognize(string);
-        System.out.print("RECOGNIZES::" + this.getName() + " = ");
-        System.out.println(value ? "SUCCESS" : "FAILED");
+        if(debug)
+        {
+            System.out.print("ACCEPTS::" + this.getName() + " = ");
+            System.out.println(value ? "SUCCESS" : "FAILED");
+        }
+        return value;
+    }
+
+    public boolean rejects(String string, boolean debug)
+    {
+        boolean value = recognize(string);
+        if(debug)
+        {
+            System.out.print("REJECTS::" + this.getName() + " = ");
+            System.out.println(!value ? "SUCCESS" : "FAILED");
+        }
         return value;
     }
 
@@ -85,8 +93,13 @@ public class Automata {
     public void addState(
             String id)
     {
-        states.put(id, new State(id));
-        non_finals.put(id, new State(id));
+        State state = new State(id);
+
+        if(contains(id))
+            return;
+
+        states.put(id, state);
+        non_finals.put(id, state);
     }
 
     /**
@@ -129,9 +142,7 @@ public class Automata {
     public Automata setStart(
             String id)
     {
-        startState = states.get(id);
-        if(startState == null)
-            throw new RuntimeException("Start state not found.");
+        startStateId = id;
         return this;
     }
 
@@ -149,7 +160,10 @@ public class Automata {
     {
         State a = states.get(origin);
         State b = states.get(destiny);
-        transitions.add(new Transition(a, b, symbol));
+        Transition transition = new Transition(a, b, symbol);
+        a.addTransition(transition);
+
+        transitions.add(transition);
         alphabet.add(symbol);
     }
 
@@ -189,6 +203,25 @@ public class Automata {
         return finals.containsKey(state.getId());
     }
 
+    //TODO: REMOVE AFTER TESTING
+    public Set<State> closure(String id)
+    {
+        return this.blackBox.closure(getState(id));
+    }
+
+    public Set<State> searchSequence(
+            String id,
+            String symbol)
+    {
+        return this.blackBox.depthSearch(getState(id), symbol);
+    }
+
+
+    public State getState(String id)
+    {
+        return getStates().get(id);
+    }
+
     public Map<String, State> getFinals() {
         return finals;
     }
@@ -202,7 +235,7 @@ public class Automata {
     }
 
     public State getStartState() {
-        return startState;
+        return getState(startStateId);
     }
 
     public Map<String, State> getStates() {
@@ -210,12 +243,19 @@ public class Automata {
     }
 
     public State getCurrent() {
-        return current;
+        return getState(currentId);
     }
 
     public void setCurrent(
-            State current) {
-        this.current = current;
+            State current)
+    {
+        if(current == null)
+        {
+            this.currentId = null;
+            return;
+        }
+
+        this.currentId = current.getId();
     }
 
     public Set<String> getAlphabet() {
@@ -235,21 +275,30 @@ public class Automata {
             String name) {
         this.name = name;
     }
+
+    boolean contains(String id)
+    {
+        return getState(id) != null;
+    }
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
+        result.append(this.getName())
+              .append("\n");
+
         getTransitions().forEach((transition)->{
-            result.append(transition).append("\n");
+            result.append(" ").append(transition).append("\n");
         });
 
-        result.append("START: ")
-              .append(this.getStartState())
+        result.append(" START: ")
+              .append(this.getStartState().getId())
               .append("\n")
-              .append("FINAL: ");
+              .append(" FINAL: ");
         getFinals().forEach((key, value)->{
-            result.append(key);
+            result.append(key).append(" | ");
         });
-        result.append("\n");
+
         return result.toString();
     }
 }
