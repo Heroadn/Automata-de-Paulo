@@ -64,7 +64,6 @@ public class AutomataJson {
 
         for (State state: this.states) {
             state.transitions.forEach((orig, transitions) -> {
-                System.out.println();
                 builder.append("ORIGEN: ")
                        .append(orig)
                        .append("\n");

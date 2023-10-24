@@ -2,9 +2,12 @@ package AutomataLib;//Implementação de Automato, baseado no artigo 'Implementa
 //De Autoria de 'Paulo Renato Kinjo', foram usadas suas interfaces de 'Automata.Transition, Automata.Automata e Automata.State'
 //foram implementadas com algumas modificações
 
+import Json.AutomataJson;
+
 public class Main {
     public static void main(String[] args)
     {
+        /*
         //automato nier
         {
             Automata nier = new Automata("NIER");
@@ -24,7 +27,7 @@ public class Main {
             nier.setStart("0").setFinal("4");
 
             //executando
-            nier.recognize(line, true);
+            nier.accepts(line, true);
         }
 
         //com loop no estado 1
@@ -46,34 +49,49 @@ public class Main {
             a2.setStart("0").setFinal("2");
 
             //executando
-            a2.recognize(line, true);
-        }
+            a2.accepts(line, true);
+        }*/
+
+        nfa(null);
     }
 
     public static void nfa(String[] args) {
         //automato nao deterministico
+        /*
         {
             Automata nfa = new Automata("NFA");
             String line = "ab";
 
             //Estados
-            nfa.addState("0", "1", "2");
+            nfa.addState("0", "1", "2", "3", "4", "5", "6", "7");
 
             //Transições
             nfa.addTransition(
                     new Transition("0", "1", "a"),  //0 --- a ---> 1
                     new Transition("0", "2", "a"),  //0 --- a ---> 2
-                    new Transition("1", "2", "b")); //1 --- b ---> 2
+                    new Transition("1", "2", "b"),
+                    new Transition("2", "3", " "),
+                    new Transition("3", "4", " "),
+                    new Transition("4", "5", " "),
+                    new Transition("6", "7", " "));
 
             //Iniciais e Finais
             nfa.setStart("0");
-            nfa.setFinal("2");
+            nfa.setFinal("7");
 
             //debug
-            System.out.println(nfa.getName() + " TRANSITIONS");
-            nfa.getTransitions().forEach(System.out::println);
+            //System.out.println(nfa);
+        }*/
 
-            System.out.println("IS_NFA::NFA = " + nfa.isNFA());
-        }
+
+        AutomataJson a2Json = AutomataJson.readAutomata("a2.json");
+        Automata a2 = a2Json.toAutomata();
+        //System.out.println(a2);
+
+        a2.toDfa();
+        //System.out.println(a2);
+        //for (State state:a2.closure("4")) {
+        //    System.out.println(state.getId());
+        //}
     }
 }

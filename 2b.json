@@ -2,7 +2,7 @@
   "details": {
     "name": "2B",
     "start": "0",
-    "finals" : ["4"]
+    "finals" : ["4", "5"]
   },
   "states": [
     {"0": [
@@ -16,11 +16,14 @@
     },
     {"3": [
       {"sym": "d", "dest": "4" }]
+    },
+    {"4": [
+      {"sym": "e", "dest": "5" }]
     }
   ],
   "debug": {
     "exec": true,
-    "accepts": ["abcd"],
-    "rejects": ["afcd"]
+    "accepts": ["abcd", "abcde"],
+    "rejects": ["afcd", "abcdef"]
   }
 }

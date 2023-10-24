@@ -1,28 +1,23 @@
 package AutomataLib;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
-public class State {
+public class State extends ArrayList<Transition> {
     private String id;
-    private List<Transition> transitions;
 
     public State(String id) {
         this.id = id;
-        this.transitions = new ArrayList<>();
     }
 
     public void addTransition(Transition transition)
     {
-        transitions.add(transition);
+        this.add(transition);
     }
 
     public List<Transition> search(String symbol)
     {
-        return transitions.stream()
+        return this.stream()
                 .filter(transition -> transition.getSymbol().equalsIgnoreCase(symbol))
                 .collect(Collectors.toList());
     }
@@ -33,14 +28,6 @@ public class State {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public List<Transition> getTransitions() {
-        return transitions;
-    }
-
-    public void setTransitions(List<Transition> transitions) {
-        this.transitions = transitions;
     }
 
     @Override

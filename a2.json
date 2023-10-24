@@ -1,0 +1,30 @@
+{
+  "details": {
+    "name": "A2",
+    "start": "1",
+    "finals" : ["6"]
+  },
+  "states": [
+    {"1": [
+      {"sym": " ", "dest": "2" },
+      {"sym": " ", "dest": "4" }]
+    },
+    {"2": [
+      {"sym": "b", "dest": "3" }]},
+    {"3": [
+      {"sym": "a", "dest": "3" },
+      {"sym": " ", "dest": "6" }
+    ]},
+    {"4": [
+      {"sym": "a", "dest": "5" }]},
+    {"5": [
+      {"sym": "a", "dest": "6" },
+      {"sym": "b", "dest": "4" },
+      {"sym": " ", "dest": "3" }]}
+  ],
+  "debug": {
+    "exec": true,
+    "accepts": ["abcd", "abcde"],
+    "rejects": ["afcd", "abcdef"]
+  }
+}

@@ -12,12 +12,17 @@ public class Json {
         if(json.debug.exec)
         {
             for (String line: json.debug.accepts) {
-                automata.recognize(line, true);
+                automata.accepts(line, true);
             }
 
             for (String line: json.debug.rejects) {
-                automata.recognize(line, true);
+               automata.rejects(line, true);
             }
+
         }
+
+        AutomataJson marianJson = AutomataJson.readAutomata("marian.json");
+        Automata marian = json.toAutomata();
+        System.out.println(marian);
     }
 }

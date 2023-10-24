@@ -8,7 +8,7 @@ public class Automata {
     HashMap<String, State> non_finals;
     HashSet<Transition> transitions;
     HashSet<String> alphabet;
-    BlackBox blackBox;     //Metodos que o automato pode usar
+    MetalBox blackBox;     //Metodos que o automato pode usar
     String startStateId;   //Estado inicial
     String currentId;      //Estado atual / head
     String name;           //Nome do automata(usado para testes)
@@ -21,7 +21,7 @@ public class Automata {
         this.alphabet = new HashSet<>();
         this.non_finals = new HashMap<String, State>();
 
-        blackBox = new BlackBox(this);
+        blackBox = new MetalBox(this);
     }
 
     public Automata(
@@ -216,6 +216,11 @@ public class Automata {
         return this.blackBox.depthSearch(getState(id), symbol);
     }
 
+    public Automata toDfa()
+    {
+        return blackBox.toDfa();
+    }
+
 
     public State getState(String id)
     {
@@ -234,7 +239,7 @@ public class Automata {
         return transitions;
     }
 
-    public State getStartState() {
+    public State getStart() {
         return getState(startStateId);
     }
 
@@ -292,7 +297,7 @@ public class Automata {
         });
 
         result.append(" START: ")
-              .append(this.getStartState().getId())
+              .append(this.getStart().getId())
               .append("\n")
               .append(" FINAL: ");
         getFinals().forEach((key, value)->{

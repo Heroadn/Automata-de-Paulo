@@ -1,16 +1,11 @@
 package AutomataLib;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 //Classe responsavel por metodos auxuliares ao automata
-public final class BlackBox {
-    private final Automata automata;
+public class BlackBox {
+    final Automata automata;
 
     public BlackBox(
             Automata automata)
@@ -21,36 +16,33 @@ public final class BlackBox {
     boolean recognize(
             String string)
     {
-        State next = null;
-
         //estado atual sera o inicial
         this.automata.setCurrent(
-                this.automata.getStartState());
+                this.automata.getStart());
 
-        //for each character in the string
-        for (char symbol: string.toCharArray())
-        {
-            //continue indo enquanto houver transições
-            next = next(
-                    this.automata.getCurrent(),
-                    String.valueOf(symbol));
-
-            //System.out.println(
-            //        "CURRENT: " + automata.getCurrent() + "\n" +
-            //        "NEXT: " + next + "\n" +
-            //        "SYMBOL: " + symbol + "\n");
-            //estado atual como o proximo da transição
-            this.automata.setCurrent(
-                    next);
+        //avance enquanto tiver simbolos transitaveis
+        for (char symbol : string.toCharArray()) {
+            next(symbol);
         }
 
-        //se tiver atingido o estado final
-        //a linguagem é reconhecida
+        //atingindo o final a linguagem é reconhecida
         return this.automata.isFinal(
                 this.automata.getCurrent());
     }
 
-    Automata minimize()
+    private void next(
+            char symbol)
+    {
+        State current = this.automata.getCurrent();
+        State next = trace(
+                current,
+                symbol);
+
+        this.automata.setCurrent(
+                next);
+    }
+
+    private Automata minimize()
     {
         List<Map<Integer, State>> partition_new = new ArrayList<>();
         List<Map<String, State>> partition_old = new ArrayList<>();
@@ -81,7 +73,7 @@ public final class BlackBox {
 
         this.automata.getStates().forEach((id, state) -> {
             for (String symbol : this.automata.getAlphabet()) {
-                if(search(state, symbol).size() > 1)
+                if(search(state.getId(), symbol).size() > 1)
                 {
                     result.set(true);
                     return;
@@ -92,20 +84,15 @@ public final class BlackBox {
         return result.get();
     }
 
-    private List<Map<Integer, State>> split( List<Map<Integer, State>> partition)
-    {
-        List<Map<Integer, State>> result =  new ArrayList<>();
-
-        return result;
-    }
-
-
-    private State next(
+    private State trace(
             State current,
-            String symbol)
+            char symbol)
     {
+        if(current == null)
+            return null;
+
         List<Transition> next = search(
-                current,
+                current.getId(),
                 String.valueOf(symbol));
 
         if(next.isEmpty())
@@ -116,20 +103,35 @@ public final class BlackBox {
 
     /**
      * procura uma transição para um estado, com base no symbolo
-     * @param  state   estado pertencente ao automato
+     * @param  stateId  ID do estado pertencente ao automato
      * @param  symbol  simbolo pertencente ao alfabeto do automato
      * @return transição para o 'state' com 'symbol'
      */
-    private List<Transition> search(
-            State state,
+    public List<Transition> search(
+            String stateId,
             String symbol)
     {
+        State state = this.automata.getState(stateId);
+
         if(state == null)
             return new ArrayList<>();
 
-        return this.automata.getTransitions().stream()
-                .filter(transition -> transition.getOrigin().getId().equalsIgnoreCase(state.getId()))
-                .filter(transition -> transition.getSymbol().equalsIgnoreCase(symbol))
-                .collect(Collectors.toList());
+        return state.search(symbol);
     }
+
+    enum Reserved
+    {
+        NULL(" ");
+        public final String label;
+
+        Reserved(String label) {
+            this.label = label;
+        }
+
+        @Override
+        public String toString() {
+            return label;
+        }
+    }
+
 }
