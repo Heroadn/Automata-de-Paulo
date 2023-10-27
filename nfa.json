@@ -1,0 +1,30 @@
+{
+  "details": {
+    "name": "NFA",
+    "start": "0",
+    "finals" : ["3"]
+  },
+  "states": [
+    {"0": [
+      {"sym": "a", "dest": "1" },
+      {"sym": "a", "dest": "2" },
+      {"sym": "", "dest": "4" },
+      {"sym": "", "dest": "5" }]
+    },
+    {"1": [
+      {"sym": "c", "dest": "3" }]},
+    {"2": [
+      {"sym": "b", "dest": "3" }
+    ]},
+    {"4": [
+      {"sym": "b", "dest": "3" }]},
+    {"5": [
+      {"sym": "c", "dest": "3" }
+    ]}
+  ],
+  "debug": {
+    "exec": true,
+    "accepts": ["ab", "ac", "b", "c"],
+    "rejects": ["afcd", "abcdef"]
+  }
+}

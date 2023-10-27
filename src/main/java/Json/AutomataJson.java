@@ -9,14 +9,14 @@ import java.util.Map;
 
 public class AutomataJson {
     public Details details;
-    public State states[]; //tmp container for parsing
+    public State[] states; //tmp container for parsing
     public Map<String, Transition[]> transitions;
 
     public Debug debug;
     public static AutomataJson readAutomata(String path)
     {
         ObjectMapper mapper = new ObjectMapper();
-        AutomataJson automataJson = null;
+        AutomataJson automataJson;
 
         try {
             automataJson = mapper.readValue(new File(path), AutomataJson.class);

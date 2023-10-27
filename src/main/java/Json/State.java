@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class State {
     @JsonProperty("map")
-    public Map<String, Transition[]> transitions;
+    public final Map<String, Transition[]> transitions;
 
     @JsonCreator
     public State(Map<String, Transition[]> map) {
