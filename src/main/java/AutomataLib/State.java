@@ -18,7 +18,7 @@ public class State extends ArrayList<Transition> {
     public List<Transition> search(String symbol)
     {
         return this.stream()
-                .filter(transition -> transition.getSymbol().equalsIgnoreCase(symbol))
+                 .filter(transition -> transition.getSymbol().equalsIgnoreCase(symbol))
                 .collect(Collectors.toList());
     }
 

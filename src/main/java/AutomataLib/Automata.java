@@ -4,24 +4,24 @@ import java.util.*;
 
 public class Automata {
     HashMap<String, State> states;
-    HashMap<String, State> finals;
-    HashMap<String, State> non_finals;
+    HashSet<String> finals;
+    HashSet<String> non_finals;
     HashSet<Transition> transitions;
     HashSet<String> alphabet;
-    MetalBox blackBox;     //Metodos que o automato pode usar
+    BlackBox blackBox;     //Metodos que o automato pode usar
     String startStateId;   //Estado inicial
     String currentId;      //Estado atual / head
     String name;           //Nome do automata(usado para testes)
 
     public Automata()
     {
-        this.states = new HashMap<String, State>();
-        this.finals = new HashMap<String, State>();
+        this.states = new HashMap<>();
+        this.finals = new HashSet<>();
         this.transitions = new HashSet<>();
         this.alphabet = new HashSet<>();
-        this.non_finals = new HashMap<String, State>();
+        this.non_finals = new HashSet<>();
 
-        blackBox = new MetalBox(this);
+        blackBox = new BlackBox(this);
     }
 
     public Automata(
@@ -49,31 +49,21 @@ public class Automata {
     boolean recognize(
             String string)
     {
-        //System.out.print("RECOGNIZES::" + this.getName() + " = ");
-        //System.out.println(value ? "SUCCESS" : "FAILED");
         return blackBox.recognize(string);
     }
 
-    public boolean accepts(String string, boolean debug)
+    public void accepts(String string)
     {
         boolean value = recognize(string);
-        if(debug)
-        {
-            System.out.print("ACCEPTS::" + this.getName() + " = ");
-            System.out.println(value ? "SUCCESS" : "FAILED");
-        }
-        return value;
+        System.out.print("ACCEPTS::" + this.getName() + " = ");
+        System.out.println(value ? "SUCCESS" : "FAILED");
     }
 
-    public boolean rejects(String string, boolean debug)
+    public void rejects(String string)
     {
         boolean value = recognize(string);
-        if(debug)
-        {
-            System.out.print("REJECTS::" + this.getName() + " = ");
-            System.out.println(!value ? "SUCCESS" : "FAILED");
-        }
-        return value;
+        System.out.print("REJECTS::" + this.getName() + " = ");
+        System.out.println(!value ? "SUCCESS" : "FAILED");
     }
 
     /**
@@ -99,7 +89,19 @@ public class Automata {
             return;
 
         states.put(id, state);
-        non_finals.put(id, state);
+        non_finals.add(id);
+    }
+
+    public void addState(
+            State state)
+    {
+        String id = state.getId();
+
+        if(contains(id))
+            return;
+
+        states.put(id, state);
+        non_finals.add(id);
     }
 
     /**
@@ -120,7 +122,8 @@ public class Automata {
     public void setFinal(
             String id)
     {
-        finals.put(id, new State(id));
+        //new State(id)
+        finals.add(id);
         non_finals.remove(id);
     }
 
@@ -131,8 +134,8 @@ public class Automata {
     public void setFinal(
             String[] ids)
     {
-        for (String id: ids)
-            finals.put(id, new State(id));
+        //new State(id)
+        Collections.addAll(finals, ids);
     }
 
     /**
@@ -163,7 +166,7 @@ public class Automata {
         Transition transition = new Transition(a, b, symbol);
         a.addTransition(transition);
 
-        transitions.add(transition);
+        //transitions.add(transition);
         alphabet.add(symbol);
     }
 
@@ -200,7 +203,8 @@ public class Automata {
         if(state == null)
             return false;
 
-        return finals.containsKey(state.getId());
+
+        return finals.contains(state.getId());
     }
 
     //TODO: REMOVE AFTER TESTING
@@ -209,29 +213,20 @@ public class Automata {
         return this.blackBox.closure(getState(id));
     }
 
-    public Set<State> searchSequence(
-            String id,
-            String symbol)
-    {
-        return this.blackBox.depthSearch(getState(id), symbol);
-    }
-
     public Automata toDfa()
     {
         return blackBox.toDfa();
     }
-
-
     public State getState(String id)
     {
         return getStates().get(id);
     }
 
-    public Map<String, State> getFinals() {
+    public Set<String> getFinals() {
         return finals;
     }
 
-    public Map<String, State> getNon_finals() {
+    public Set<String> getNon_finals() {
         return non_finals;
     }
 
@@ -292,17 +287,16 @@ public class Automata {
         result.append(this.getName())
               .append("\n");
 
-        getTransitions().forEach((transition)->{
-            result.append(" ").append(transition).append("\n");
+        getStates().forEach((key, value) -> {
+            result.append(value).append("\n");
+            value.forEach((transition)-> result.append(" ").append(transition).append("\n"));
         });
 
         result.append(" START: ")
               .append(this.getStart().getId())
               .append("\n")
               .append(" FINAL: ");
-        getFinals().forEach((key, value)->{
-            result.append(key).append(" | ");
-        });
+        getFinals().forEach( value -> result.append(value).append(" | "));
 
         return result.toString();
     }

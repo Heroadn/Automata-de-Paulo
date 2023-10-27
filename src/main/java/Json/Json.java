@@ -1,7 +1,6 @@
 package Json;
 
 import AutomataLib.Automata;
-import AutomataLib.Transition;
 
 public class Json {
 
@@ -12,11 +11,11 @@ public class Json {
         if(json.debug.exec)
         {
             for (String line: json.debug.accepts) {
-                automata.accepts(line, true);
+                automata.accepts(line);
             }
 
             for (String line: json.debug.rejects) {
-               automata.rejects(line, true);
+               automata.rejects(line);
             }
 
         }

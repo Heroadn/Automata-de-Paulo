@@ -7,7 +7,7 @@ import Json.AutomataJson;
 public class Main {
     public static void main(String[] args)
     {
-        /*
+
         //automato nier
         {
             Automata nier = new Automata("NIER");
@@ -18,16 +18,16 @@ public class Main {
 
             //Transições
             nier.addTransition(
-                    new Transition().from("0").to("1").withSymbol("a"),
-                    new Transition().from("1").to("2").withSymbol("b"),
-                    new Transition().from("2").to("3").withSymbol("c"),
-                    new Transition().from("3").to("4").withSymbol("d"));
+                    new Transition("a").from("0").to("1"),
+                    new Transition("b").from("1").to("2"),
+                    new Transition("c").from("2").to("3"),
+                    new Transition("d").from("3").to("4"));
 
             //Iniciais e Finais
             nier.setStart("0").setFinal("4");
 
             //executando
-            nier.accepts(line, true);
+            nier.accepts(line);
         }
 
         //com loop no estado 1
@@ -40,58 +40,88 @@ public class Main {
 
             //Transições
             a2.addTransition(
-                    new Transition().from("0").to("1").withSymbol("a"),
-                    new Transition().from("1").to("2").withSymbol("a"),
-                    new Transition().from("1").toLoop("b"),
-                    new Transition().from("2").toLoop("a"));
+                    new Transition("a").from("0").to("1"),
+                    new Transition("a").from("1").to("2"),
+                    new Transition("b").from("1").toLoop(),
+                    new Transition("a").from("2").toLoop());
 
             //Iniciais e Finais
             a2.setStart("0").setFinal("2");
 
             //executando
-            a2.accepts(line, true);
-        }*/
+            a2.accepts(line);
+        }
+
+        AutomataJson json = AutomataJson.readAutomata("2b.json");
+        Automata automata = json.toAutomata();
+
+        if(json.debug.exec)
+        {
+            for (String line: json.debug.accepts) {
+                automata.accepts(line);
+            }
+
+            for (String line: json.debug.rejects) {
+                automata.rejects(line);
+            }
+
+        }
 
         nfa(null);
     }
 
     public static void nfa(String[] args) {
         //automato nao deterministico
-        /*
         {
-            Automata nfa = new Automata("NFA");
+            Automata basicNFA = new Automata("BASIC_NFA");
             String line = "ab";
 
             //Estados
-            nfa.addState("0", "1", "2", "3", "4", "5", "6", "7");
+            basicNFA.addState("0", "1", "2", "3", "4", "5", "6", "7");
 
             //Transições
-            nfa.addTransition(
-                    new Transition("0", "1", "a"),  //0 --- a ---> 1
-                    new Transition("0", "2", "a"),  //0 --- a ---> 2
-                    new Transition("1", "2", "b"),
-                    new Transition("2", "3", " "),
-                    new Transition("3", "4", " "),
-                    new Transition("4", "5", " "),
-                    new Transition("6", "7", " "));
+            basicNFA.addTransition(
+                    new Transition("a").from("0").to("1"),  //0 --- a ---> 1
+                    new Transition("a").from("0").to("2"),  //0 --- a ---> 2
+                    new Transition("b").from("1").to("2"),
+                    new Transition("").from("2").to("3"),
+                    new Transition("").from("3").to("4"),
+                    new Transition("").from("4").to("5"),
+                    new Transition("").from("5").to("6"),
+                    new Transition("").from("6").to("7"));
 
             //Iniciais e Finais
-            nfa.setStart("0");
-            nfa.setFinal("7");
+            basicNFA.setStart("0");
+            basicNFA.setFinal("7");
 
             //debug
-            //System.out.println(nfa);
-        }*/
+            basicNFA = basicNFA.toDfa();
+            basicNFA.accepts(line);
+        }
 
+
+        AutomataJson nfaJson = AutomataJson.readAutomata("nfa.json");
+        Automata nfa = nfaJson.toAutomata().toDfa();
+
+        if(nfaJson.debug.exec)
+        {
+            for (String line: nfaJson.debug.accepts)
+                nfa.accepts(line);
+
+            for (String line: nfaJson.debug.rejects)
+                nfa.rejects(line);
+        }
 
         AutomataJson a2Json = AutomataJson.readAutomata("a2.json");
-        Automata a2 = a2Json.toAutomata();
-        //System.out.println(a2);
+        Automata a2 = a2Json.toAutomata().toDfa();
 
-        a2.toDfa();
-        //System.out.println(a2);
-        //for (State state:a2.closure("4")) {
-        //    System.out.println(state.getId());
-        //}
+        if(a2Json.debug.exec)
+        {
+            for (String line: a2Json.debug.accepts)
+                a2.accepts(line);
+
+            for (String line: a2Json.debug.rejects)
+                a2.rejects(line);
+        }
     }
 }

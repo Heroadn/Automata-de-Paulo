@@ -8,9 +8,10 @@ public class Transition {
     public Transition() {
     }
 
-    public Transition(String origin) {
-        this.origin  = new State(origin);
+    public Transition(String symbol) {
+        this.symbol = symbol;
     }
+
 
     public Transition(State origin, State destiny, String symbol) {
         this.origin  = origin;
@@ -25,11 +26,10 @@ public class Transition {
             symbol);
     }
 
-    public Transition to(String destiny, String symbol)
-    {
-        this.destiny = new State(destiny);
-        this.symbol  = symbol;
-        return this;
+    public Transition(Transition transition) {
+        this.origin = transition.getOrigin();
+        this.destiny = transition.getOrigin();
+        this.symbol = transition.getSymbol();
     }
 
     public Transition from(String origin)
@@ -44,16 +44,9 @@ public class Transition {
         return this;
     }
 
-    public Transition withSymbol(String symbol)
-    {
-        this.symbol  = symbol;
-        return this;
-    }
-
-    public Transition toLoop(String symbol)
+    public Transition toLoop()
     {
         this.destiny = this.getOrigin();
-        this.symbol  = symbol;
         return this;
     }
 
