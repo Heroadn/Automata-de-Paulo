@@ -33,7 +33,7 @@ public class SearchComponent {
             State state,
             String symbol)
     {
-
+        //TODO: trocar state por stateId
         Stack<State> backtrack = new Stack<>();
         Group result = new Group();
         List<Transition> paths;

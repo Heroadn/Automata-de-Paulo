@@ -207,12 +207,6 @@ public class Automata {
         return finals.contains(state.getId());
     }
 
-    //TODO: REMOVE AFTER TESTING
-    public Set<State> closure(String id)
-    {
-        return this.blackBox.closure(getState(id));
-    }
-
     public Automata toDfa()
     {
         return blackBox.toDfa();

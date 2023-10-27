@@ -1,14 +1,15 @@
 package AutomataLib;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class LanguageComponent {
     private final Automata automata;
     private final SearchComponent search;
 
-    public LanguageComponent(Automata automata, SearchComponent search) {
+    public LanguageComponent(Automata automata) {
         this.automata = automata;
-        this.search = search;
+        this.search   = new SearchComponent(this.automata);
     }
 
     boolean recognize(
@@ -55,5 +56,27 @@ public class LanguageComponent {
             return null;
 
         return next.get(0).getDestiny();
+    }
+
+    /**
+     * Verifica se o automata tem as condiçoes de
+     * nao ser deterministico
+     * @return 'true' se o automata for nao deterministico
+     */
+    public boolean isNFA()
+    {
+        AtomicBoolean result = new AtomicBoolean(false);
+
+        this.automata.getStates().forEach((id, state) -> {
+            for (String symbol : this.automata.getAlphabet()) {
+                if(search.find(state.getId(), symbol).size() > 1)
+                {
+                    result.set(true);
+                    return;
+                }
+            }
+        });
+
+        return result.get();
     }
 }

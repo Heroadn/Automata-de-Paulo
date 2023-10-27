@@ -8,9 +8,9 @@ public class ConversionComponent {
 
     private final SearchComponent search;
 
-    public ConversionComponent(Automata automata, SearchComponent search) {
+    public ConversionComponent(Automata automata) {
         this.automata = automata;
-        this.search = search;
+        this.search   = new SearchComponent(this.automata);
     }
 
     public Automata toDfa()
