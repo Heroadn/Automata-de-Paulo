@@ -32,7 +32,7 @@ public class Main {
             //Iniciais e Finais
             nier.setStart("0").setFinal("4");
 
-            //executando
+            //executando e mostrando resultados
             nier.accepts(line);
         }
 
@@ -54,7 +54,7 @@ public class Main {
             //Iniciais e Finais
             a2.setStart("0").setFinal("2");
 
-            //executando
+            //executando e mostrando resultados
             a2.accepts(line);
         }
 
@@ -99,7 +99,7 @@ public class Main {
             basicNFA.setStart("0");
             basicNFA.setFinal("7");
 
-            //debug
+            //debug e mostrando resultados
             basicNFA = basicNFA.toDfa();
             basicNFA.accepts(line);
         }

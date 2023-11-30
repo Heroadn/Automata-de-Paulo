@@ -4,41 +4,46 @@ Escrito em JAVA 8
 
 # Exemplo 1
 ```
-  Automata nier = new Automata("NIER");
-  String line = "ab";
-  
-  //Estados
-  nier.addState(0, 1, 2);
-  
-  //Transições
-  nier.addTransition(0, 1, "a");
-  nier.addTransition(1, 2, "b");
-  
-  //Iniciais e Finais
-  nier.setStart(0);
-  nier.setFinal(2);
-  
-  System.out.println("AUTOMATO RECONHECE A LINGUAGEM: " + nier.recognize(line));
+    Automata nier = new Automata("NIER");
+    String line = "abcd";
+    
+    //Estados
+    nier.addState("0", "1", "2", "3", "4");
+    
+    //Transições
+    nier.addTransition(
+            new Transition("a").from("0").to("1"),
+            new Transition("b").from("1").to("2"),
+            new Transition("c").from("2").to("3"),
+            new Transition("d").from("3").to("4"));
+    
+    //Iniciais e Finais
+    nier.setStart("0").setFinal("4");
+    
+    //executando
+    nier.accepts(line);
 ```
 
 # Exemplo 2 - Com loop no estado 1
 ```
-  Automata a2 = new Automata("A2");
-  String line = "abbbbbba";
-
-  //Estados
-  a2.addState(0, 1, 2);
-
-  //Transições
-  a2.addTransition(0, 1, "a");
-  a2.addTransition(1, 1, "b");
-  a2.addTransition(1, 2, "a");
-
-  //Iniciais e Finais
-  a2.setStart(0);
-  a2.setFinal(2);
-
-  System.out.println("AUTOMATO RECONHECE A LINGUAGEM: " + a2.recognize(line));
+    Automata a2 = new Automata("A2");
+    String line = "abbbbbbaaaa";
+    
+    //Estados
+    a2.addState("0", "1", "2");
+    
+    //Transições
+    a2.addTransition(
+            new Transition("a").from("0").to("1"),
+            new Transition("a").from("1").to("2"),
+            new Transition("b").from("1").toLoop(),
+            new Transition("a").from("2").toLoop());
+    
+    //Iniciais e Finais
+    a2.setStart("0").setFinal("2");
+    
+    //executando
+    a2.accepts(line);
 ```
 
 # Exemplo 3 - Carregando automato de json e o executando
