@@ -3,12 +3,11 @@ package AutomataLib;
 import java.util.*;
 
 public class Automata {
-    HashMap<String, State> states;
-    HashSet<String> finals;
-    HashSet<String> non_finals;
-    HashSet<Transition> transitions;
+    final HashMap<String, State> states;
+    final HashSet<String> finals;
+    final HashSet<String> non_finals;
     HashSet<String> alphabet;
-    BlackBox blackBox;     //Metodos que o automato pode usar
+    final BlackBox blackBox;     //Metodos que o automato pode usar
     String startStateId;   //Estado inicial
     String currentId;      //Estado atual / head
     String name;           //Nome do automata(usado para testes)
@@ -17,7 +16,6 @@ public class Automata {
     {
         this.states = new HashMap<>();
         this.finals = new HashSet<>();
-        this.transitions = new HashSet<>();
         this.alphabet = new HashSet<>();
         this.non_finals = new HashSet<>();
 
@@ -28,16 +26,6 @@ public class Automata {
             String name)
     {
         this();
-        this.name = name;
-    }
-
-    public Automata(String name,
-                    String[] states,
-                    Transition[] transitions)
-    {
-        this();
-        this.addState(states);
-        this.addTransition(transitions);
         this.name = name;
     }
 
@@ -55,25 +43,13 @@ public class Automata {
     public void accepts(String string)
     {
         boolean value = recognize(string);
-        System.out.print("ACCEPTS::" + this.getName() + " = ");
-        System.out.println(value ? "SUCCESS" : "FAILED");
+        debugEvaluate("ACCEPTS::", value);
     }
 
     public void rejects(String string)
     {
         boolean value = recognize(string);
-        System.out.print("REJECTS::" + this.getName() + " = ");
-        System.out.println(!value ? "SUCCESS" : "FAILED");
-    }
-
-    /**
-     * Verifica se o automata tem as condiçoes de
-     * nao ser deterministico
-     * @return 'true' se o automata for nao deterministico
-     */
-    public boolean isNFA()
-    {
-        return blackBox.isNFA();
+        debugEvaluate("REJECTS::", !value);
     }
 
     /**
@@ -84,12 +60,7 @@ public class Automata {
             String id)
     {
         State state = new State(id);
-
-        if(contains(id))
-            return;
-
-        states.put(id, state);
-        non_finals.add(id);
+        addState(state);
     }
 
     public void addState(
@@ -122,7 +93,6 @@ public class Automata {
     public void setFinal(
             String id)
     {
-        //new State(id)
         finals.add(id);
         non_finals.remove(id);
     }
@@ -134,7 +104,6 @@ public class Automata {
     public void setFinal(
             String[] ids)
     {
-        //new State(id)
         Collections.addAll(finals, ids);
     }
 
@@ -164,9 +133,8 @@ public class Automata {
         State a = states.get(origin);
         State b = states.get(destiny);
         Transition transition = new Transition(a, b, symbol);
-        a.addTransition(transition);
 
-        //transitions.add(transition);
+        a.addTransition(transition);
         alphabet.add(symbol);
     }
 
@@ -181,18 +149,6 @@ public class Automata {
     }
 
     /**
-     * Adiciona o alphabeto do automata,
-     * seu alfabeto tambem pode ser adicionado
-     * indiretamente pelo metodo addTransition
-     * @param  alphabet   alfabeto do automata
-     */
-    public void setAlphabet(
-            List<String> alphabet)
-    {
-        this.alphabet.addAll(alphabet);
-    }
-
-    /**
      * Verifica se o estado em questão é final
      * @param  state  estado pertencente ao automato
      * @return      se o estado é final
@@ -202,7 +158,6 @@ public class Automata {
     {
         if(state == null)
             return false;
-
 
         return finals.contains(state.getId());
     }
@@ -218,14 +173,6 @@ public class Automata {
 
     public Set<String> getFinals() {
         return finals;
-    }
-
-    public Set<String> getNon_finals() {
-        return non_finals;
-    }
-
-    public Set<Transition> getTransitions() {
-        return transitions;
     }
 
     public State getStart() {
@@ -256,18 +203,8 @@ public class Automata {
         return alphabet;
     }
 
-    public void setAlphabet(
-            HashSet<String> alphabet) {
-        this.alphabet = alphabet;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(
-            String name) {
-        this.name = name;
     }
 
     boolean contains(String id)
@@ -293,5 +230,10 @@ public class Automata {
         getFinals().forEach( value -> result.append(value).append(" | "));
 
         return result.toString();
+    }
+
+    private void debugEvaluate(String x, boolean value) {
+        System.out.print(x + this.getName() + " = ");
+        System.out.println(value ? "SUCCESS" : "FAILED");
     }
 }

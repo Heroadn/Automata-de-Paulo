@@ -1,7 +1,8 @@
-package AutomataLib;//Implementação de Automato, baseado no artigo 'Implementação de Autômatos Finitos'
 //De Autoria de 'Paulo Renato Kinjo', foram usadas suas interfaces de 'Automata.Transition, Automata.Automata e Automata.State'
 //foram implementadas com algumas modificações
 
+import AutomataLib.Automata;
+import AutomataLib.Transition;
 import Json.AutomataJson;
 
 public class Main {
