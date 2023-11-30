@@ -41,5 +41,58 @@ Escrito em JAVA 8
   System.out.println("AUTOMATO RECONHECE A LINGUAGEM: " + a2.recognize(line));
 ```
 
+# Exemplo 3 - Carregando automato de json e o executando
+```
+    AutomataJson json = AutomataJson.readAutomata("2b.json");
+    Automata automata = json.toAutomata();
+    
+    if(json.debug.exec)
+    {
+        for (String line: json.debug.accepts) {
+            automata.accepts(line);
+        }
+    
+        for (String line: json.debug.rejects) {
+            automata.rejects(line);
+        }
+    
+    }
+```
+- Arquivo exemplo 2b.json
+```
+{
+  "details": {
+    "name": "2B",
+    "start": "0",
+    "finals" : ["4", "5"]
+  },
+  "states": [
+    {"0": [
+      {"sym": "a", "dest": "1" }]
+    },
+    {"1": [
+      {"sym": "b", "dest": "2" }]
+    },
+    {"2": [
+      {"sym": "c", "dest": "3" }]
+    },
+    {"3": [
+      {"sym": "d", "dest": "4" }]
+    },
+    {"4": [
+      {"sym": "e", "dest": "5" }]
+    }
+  ],
+  "debug": {
+    "exec": true,
+    "accepts": ["abcd", "abcde"],
+    "rejects": ["afcd", "abcdef"]
+  }
+}
+```
+
+
+
+
 
 
