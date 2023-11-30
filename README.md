@@ -1,5 +1,5 @@
-# Automata-de-Paulo
-Implementação de Automata, segundo artigo 'Implementação de Autômatos Finitos' de Paulo Renato Kinjo.
+# AutomataLib.AutomataLib-de-Paulo
+Implementação de AutomataLib.AutomataLib, segundo artigo 'Implementação de Autômatos Finitos' de Paulo Renato Kinjo.
 Escrito em JAVA 8
 
 # Exemplo 1
@@ -23,7 +23,7 @@ Escrito em JAVA 8
 
 # Exemplo 2 - Com loop no estado 1
 ```
-  Automata a2 = new Automata();
+  Automata a2 = new Automata("A2");
   String line = "abbbbbba";
 
   //Estados
@@ -40,3 +40,6 @@ Escrito em JAVA 8
 
   System.out.println("AUTOMATO RECONHECE A LINGUAGEM: " + a2.recognize(line));
 ```
+
+
+
